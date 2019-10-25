@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Units of measurement</name>
+    <code>units_of_measurement</code>
+    <version>1</version>
+    <link>eapdob@gmail.com</link>
+    <author>eapdob</author>
+    <!-- Menu -->
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$this->user->hasPermission('access', 'catalog/recurring')]]></search>
+            <add position="before" trim="false" offset="0"><![CDATA[
+                if ($this->user->hasPermission('access', 'catalog/unit')) {
+                    $catalog[] = array(
+                        'name'     => $this->language->get('text_unit'),
+                        'href'     => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()
+                    );
+			    }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/ru-ru/common/column_left.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$_['text_product']]]></search>
+            <add position="after" trim="false" offset="0">
+                <![CDATA[$_['text_unit']             = 'Единицы измерения';]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/ua-uk/common/column_left.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$_['text_product']]]></search>
+            <add position="after" trim="false" offset="0">
+                <![CDATA[$_['text_unit']             = 'Одиниця вимiру';]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/en-gb/common/column_left.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$_['text_product']]]></search>
+            <add position="after" trim="false" offset="0">
+                <![CDATA[$_['text_unit']             = 'Unit of measurement';]]></add>
+        </operation>
+    </file>
+    <!-- Admin product page -->
+    <file path="admin/controller/catalog/product.php">
+        <operation>
+            <search index="0"><![CDATA[$this->load->model('catalog/manufacturer');]]></search>
+            <add position="before"><![CDATA[
+                $this->load->model('catalog/unit');
+
+                $data['units'] = $this->model_catalog_unit->getUnits();
+
+                if (isset($this->request->post['unit_id'])) {
+                    $data['unit_id'] = $this->request->post['unit_id'];
+                } elseif (!empty($product_info)) {
+                    $data['unit_id'] = $product_info['unit_id'];
+                } else {
+                    $data['unit_id'] = $this->config->get('config_unit_id');
+                }
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="2"><![CDATA[$this->load->model('catalog/manufacturer');]]></search>
+            <add position="before"><![CDATA[
+                $this->load->model('catalog/unit');
+
+                $data['units'] = $this->model_catalog_unit->getUnits();
+
+                if (isset($this->request->post['unit_id'])) {
+                    $data['unit_id'] = $this->request->post['unit_id'];
+                } elseif (!empty($product_info)) {
+                    $data['unit_id'] = $product_info['unit_id'];
+                } else {
+                    $data['unit_id'] = $this->config->get('config_unit_id');
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/catalog/product.php">
+        <operation>
+            <search regex="true" limit="2"><![CDATA[~\$data\[\'points\'\]~]]></search>
+            <add><![CDATA[$data['points'] . "', unit_id = '" . (int)$data['unit_id']]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[public function getTotalProductsByManufacturerId($manufacturer_id)]]></search>
+            <add position="before"><![CDATA[
+                public function getTotalProductsByUnitId($unit_id) {
+                    $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE unit_id = '" . (int)$unit_id . "'");
+
+                    return $query->row['total'];
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/ru-ru/catalog/product.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$_['entry_price']]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$_['entry_unit']             = 'Единица измерения';]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/ua-uk/catalog/product.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$_['entry_price']]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$_['entry_unit']             = 'Одиниця виміру';]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/en-gb/catalog/product.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$_['entry_price']]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$_['entry_unit']             = 'Unit of measurement';]]></add>
+        </operation>
+    </file>
+    <file path="admin/view/template/catalog/product_form.twig">
+        <operation>
+            <search trim="true" index="0">
+                <![CDATA[<input type="text" name="price" value="{{ price }}" placeholder="{{ entry_price }}" id="input-price" class="form-control" />]]></search>
+            <add position="after" trim="false" offset="2"><![CDATA[
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-unit">{{ entry_unit }}</label>
+                    <div class="col-sm-10">
+                      <select name="unit_id" id="input-unit" class="form-control">
+                        <option value="0">{{ text_none }}</option>
+                        {% for unit in units %}
+                          {% if unit.unit_id == unit_id %}
+                            <option value="{{ unit.unit_id }}" selected="selected">{{ unit.title }}</option>
+                          {% else %}
+                            <option value="{{ unit.unit_id }}">{{ unit.title }}</option>
+                          {% else if %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                </div>
+            ]]></add>
+        </operation>
+    </file>
+</modification>

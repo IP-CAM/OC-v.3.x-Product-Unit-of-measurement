@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Units of measurement frontend</name>
+    <code>units_of_measurement_front_end</code>
+    <version>1</version>
+    <link>eapdob@gmail.com</link>
+    <author>eapdob</author>
+    <!-- frontend -->
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search trim="true" index="0"><![CDATA[$data['points'] = $product_info['points'];]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$data['unit'] = $product_info['unit'];]]></add>
+        </operation>
+    </file>
+    <file path="catalog/model/catalog/product.php">
+        <operation>
+            <search><![CDATA[public function getProduct($product_id) {]]></search>
+            <add position="after"><![CDATA[
+                $symbol = 'AS manufacturer, u.symbol_rus AS unit';
+                if ((int)$this->config->get('config_language_id') == 2) {
+                    $symbol = 'AS manufacturer, u.symbol_intl AS unit';
+                } else {
+                    $symbol = 'AS manufacturer, u.symbol_ukr AS unit';
+                }
+            ]]></add>
+        </operation>
+        <operation>
+            <search regex="true" limit="1"><![CDATA[~AS manufacturer~]]></search>
+            <add><![CDATA[" . $symbol . "]]></add>
+        </operation>
+        <operation>
+            <search regex="true" limit="1"><![CDATA[~WHERE p.product_id~]]></search>
+            <add><![CDATA[LEFT JOIN " . DB_PREFIX . "unit u ON (p.unit_id = u.unit_id) WHERE p.product_id]]></add>
+        </operation>
+        <operation>
+            <search trim="true" index="0"><![CDATA['weight'           => $query->row['weight'],]]></search>
+            <add position="before" trim="false" offset="0"><![CDATA[
+                'unit_id'          => $query->row['unit_id'],
+                'unit'             => (int)$this->config->get('config_language_id') == 1 ? $query->row['symbol_rus'] : (int)$this->config->get('config_language_id') == 2 ? $query->row['symbol_intl'] : $query->row['symbol_ukr'],]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation>
+            <search trim="true"><![CDATA[{{ price }}]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[{% if unit %}{{ price }}/{{ unit }}{% else %}{{ price }}{% endif %}]]></add>
+        </operation>
+        <operation>
+            <search trim="true"><![CDATA[{{ special }}]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[{% if unit %}{{ special }}/{{ unit }}{% else %}{{ special }}{% endif %}]]></add>
+        </operation>
+    </file>
+    <!-- default -->
+    <file path="catalog/view/theme/default/template/product/product.twig">
+        <operation>
+            <search trim="true"><![CDATA[$('#popup-main-price').html(json['price']);]]></search>
+            <add position="replace"><![CDATA[$('#popup-main-price').html(json['price']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+        <operation>
+            <search trim="true"><![CDATA[$('#popup-special-price').html(json['special']);]]></search>
+            <add position="replace"><![CDATA[$('#popup-special-price').html(json['special']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+    </file>
+    <!-- END default -->
+    <!-- oct_ultrastore -->
+    <file path="catalog/view/theme/oct_ultrastore/template/product/product.twig">
+        <operation>
+            <search trim="true"><![CDATA[$('#product-product .us-price-actual').html(json['price']);]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[$('#product-product .us-price-actual').html(json['price']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+        <operation>
+            <search trim="true"><![CDATA[$('#product-product .us-price-old').html(json['price']);]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[$('#product-product .us-price-old').html(json['price']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+        <operation>
+            <search trim="true"><![CDATA[$('#product-product .us-price-new').html(json['special']);]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[$('#product-product .us-price-new').html(json['special']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+    </file>
+    <!-- END oct_ultrastore -->
+    <file path="catalog/controller/product/{special,category,search,manufacturer}*.php">
+        <operation>
+            <search trim="true"><![CDATA[$data['products'][] = array(]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[             'unit'        => $result['unit'],]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/{module,extension/module}/{bestseller,latest,special}*.php">
+        <operation>
+            <search trim="true"><![CDATA[$data['products'][] = array(]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[             'unit'        => $result['unit'],]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/extension/module/{featured}*.php">
+        <operation>
+            <search trim="true"><![CDATA[$data['products'][] = array(]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[             'unit'        => $product_info['unit'],]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/{special,category,search,manufacturer_info}*.twig">
+        <operation>
+            <search trim="true"><![CDATA[{{ product.price }}]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.price }}/{{ product.unit }}{% else %}{{ product.price }}{% endif %}]]></add>
+        </operation>
+        <operation>
+            <search trim="true"><![CDATA[{{ product.special }}]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.special }}/{{ product.unit }}{% else %}{{ product.special }}{% endif %}]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/{module,extension/module}/{bestseller,latest,special,featured}*.twig">
+        <operation>
+            <search trim="true"><![CDATA[{{ product.price }}]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.price }}/{{ product.unit }}{% else %}{{ product.price }}{% endif %}]]></add>
+        </operation>
+        <operation>
+            <search trim="true"><![CDATA[{{ product.special }}]]></search>
+            <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.special }}/{{ product.unit }}{% else %}{{ product.special }}{% endif %}]]></add>
+        </operation>
+    </file>
+
+
+    <!--<file path="catalog/controller/extension/module}/{oct_product_tab,oct_product_viewed}.php">
+        <operation error="skip">
+            <search><![CDATA['name' => $result['name'],]]></search>
+            <add position="after"><![CDATA[             'unit'        => $result['unit'],]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA['name' => $product_info['name'],]]></search>
+            <add position="after"><![CDATA[             'unit'        => $product_info['unit'],]]></add>
+        </operation>
+    </file>-->
+
+    <!--<file path="catalog/view/theme/*/template/extension/module}/{oct_product_tab,oct_product_viewed}.twig">
+        <operation error="skip">
+            <search trim="true"><![CDATA[{{ product.price }}]]></search>
+            <add position="replace"><![CDATA[{% if product.unit %}{{ product.price }}/{{ product.unit }}{% else %}{{ product.price }}{% endif %}]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true"><![CDATA[{{ product.special }}]]></search>
+            <add position="replace"><![CDATA[{% if product.unit %}{{ product.special }}/{{ product.unit }}{% else %}{{ product.special }}{% endif %}]]></add>
+        </operation>
+    </file>-->
+
+
+    <!--<file path="catalog/controller/octemplates/module/oct_popup_view.php">
+        <operation error="skip">
+            <search><![CDATA[$data['product_name'] = $product_info['name'];]]></search>
+            <add position="after"><![CDATA[$data['unit'] = $product_info['unit'];]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/oct_ultrastore/template/octemplates/module/oct_popup_view.twig">
+        <operation error="skip">
+            <search><![CDATA[{{ price }}]]></search>
+            <add position="replace"><![CDATA[{% if unit %}{{ price }}/{{ unit }}{% else %}{{ price }}{% endif %}]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true"><![CDATA[{{ special }}]]></search>
+            <add position="replace"><![CDATA[{% if unit %}{{ special }}/{{ unit }}{% else %}{{ special }}{% endif %}]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true"><![CDATA[$('#us-quickview-modal .us-price-actual').html(json['price']);]]></search>
+            <add position="replace"><![CDATA[$('#us-quickview-modal .us-price-actual').html(json['price']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true"><![CDATA[$('#us-quickview-modal .us-price-old').html(json['price']);]]></search>
+            <add position="replace"><![CDATA[$('#us-quickview-modal .us-price-old').html(json['price']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true"><![CDATA[$('#us-quickview-modal .us-price-new').html(json['special']);]]></search>
+            <add position="replace"><![CDATA[$('#us-quickview-modal .us-price-new').html(json['special']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
+        </operation>
+    </file>-->
+
+
+    <!-- cart -->
+    <file path="system/library/cart/cart.php">
+        <operation error="skip">
+            <search><![CDATA[WHERE p2s.store_id]]></search>
+            <add position="replace"><![CDATA[LEFT JOIN " . DB_PREFIX . "unit u ON (p.unit_id = u.unit_id) WHERE p2s.store_id]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true" index="0"><![CDATA[$product_data[] = array(]]></search>
+            <add position="before" trim="false" offset="0"><![CDATA[
+                $symbol = 'symbol_rus';
+                if ((int)$this->config->get('config_language_id') == 2) {
+                    $symbol = 'symbol_intl';
+                } else {
+                    $symbol = 'symbol_ukr';
+                }
+            ]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true" index="0"><![CDATA[$product_data[] = array(]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[                 'unit'            => $product_query->row[$symbol],]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/cart.php">
+        <operation error="skip">
+            <search trim="true" index="0"><![CDATA[$data['products'][] = array(]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[                 'unit'   => $product['unit'],]]></add>
+        </operation>    
+    </file>
+    <file path="catalog/language/ru-ru/checkout/cart.php">
+        <operation error="skip">
+            <search trim="true"><![CDATA[$_['text_payment_until_canceled_description']]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$_['column_unit']  = 'Ед. изм';]]></add>
+        </operation>
+    </file>
+    <file path="catalog/language/uk-ua/checkout/cart.php">
+        <operation error="skip">
+            <search trim="true"><![CDATA[$_['text_payment_until_canceled_description']]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$_['column_unit']  = 'Од. вим';]]></add>
+        </operation>
+    </file>
+    <file path="catalog/language/en-gb/checkout/cart.php">
+        <operation error="skip">
+            <search trim="true"><![CDATA[$_['text_payment_until_canceled_description']]]></search>
+            <add position="after" trim="false" offset="0"><![CDATA[$_['column_unit']  = 'Unit. m';]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/default/template/checkout/cart.twig">
+        <operation error="skip">
+            <search trim="true" index="0"><![CDATA[<td class="text-right">{{ column_price }}</td>]]></search>
+            <add position="before" trim="false" offset="0"><![CDATA[<td class="text-left">{{ column_unit }}</td>]]></add>
+        </operation>
+        <operation error="skip">
+            <search trim="true" index="0"><![CDATA[<td class="text-right">{{ product.price }}</td>]]></search>
+            <add position="before" trim="false" offset="0"><![CDATA[                <td class="text-right">{{ product.unit }}</td>]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/oct_ultrastore/template/checkout/cart.twig">
+        <operation error="skip">
+            <search trim="true" index="0"><![CDATA[<div class="us-cart-price-all">{{ column_total }}: {{ product.total }}</div>]]></search>
+            <add position="before" trim="false" offset="0"><![CDATA[<div class="us-cart-price-unit">{{ column_unit }}: {{ product.unit }}</div>]]></add>
+        </operation>
+    </file>
+</modification>
