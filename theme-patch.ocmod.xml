@@ -49,18 +49,6 @@
             <add position="replace" trim="false" offset="0"><![CDATA[{% if unit %}{{ special }}/{{ unit }}{% else %}{{ special }}{% endif %}]]></add>
         </operation>
     </file>
-    <!-- default -->
-    <file path="catalog/view/theme/default/template/product/product.twig">
-        <operation>
-            <search trim="true"><![CDATA[$('#popup-main-price').html(json['price']);]]></search>
-            <add position="replace"><![CDATA[$('#popup-main-price').html(json['price']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
-        </operation>
-        <operation>
-            <search trim="true"><![CDATA[$('#popup-special-price').html(json['special']);]]></search>
-            <add position="replace"><![CDATA[$('#popup-special-price').html(json['special']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
-        </operation>
-    </file>
-    <!-- END default -->
     <!-- oct_ultrastore -->
     <file path="catalog/view/theme/oct_ultrastore/template/product/product.twig">
         <operation>

@@ -44,22 +44,6 @@
     <!-- Admin product page -->
     <file path="admin/controller/catalog/product.php">
         <operation>
-            <search index="0"><![CDATA[$this->load->model('catalog/manufacturer');]]></search>
-            <add position="before"><![CDATA[
-                $this->load->model('catalog/unit');
-
-                $data['units'] = $this->model_catalog_unit->getUnits();
-
-                if (isset($this->request->post['unit_id'])) {
-                    $data['unit_id'] = $this->request->post['unit_id'];
-                } elseif (!empty($product_info)) {
-                    $data['unit_id'] = $product_info['unit_id'];
-                } else {
-                    $data['unit_id'] = $this->config->get('config_unit_id');
-                }
-            ]]></add>
-        </operation>
-        <operation>
             <search index="2"><![CDATA[$this->load->model('catalog/manufacturer');]]></search>
             <add position="before"><![CDATA[
                 $this->load->model('catalog/unit');
