@@ -93,7 +93,7 @@
             <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.special }}/{{ product.unit }}{% else %}{{ product.special }}{% endif %}]]></add>
         </operation>
     </file>
-    <file path="catalog/view/theme/*/template/{module,extension/module}/{bestseller,latest,special,featured}*.twig">
+    <file path="catalog/view/theme/*/template/extension/module/{bestseller,latest,special,featured}*.twig">
         <operation>
             <search trim="true"><![CDATA[{{ product.price }}]]></search>
             <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.price }}/{{ product.unit }}{% else %}{{ product.price }}{% endif %}]]></add>
@@ -103,9 +103,7 @@
             <add position="replace" trim="false" offset="0"><![CDATA[{% if product.unit %}{{ product.special }}/{{ product.unit }}{% else %}{{ product.special }}{% endif %}]]></add>
         </operation>
     </file>
-
-
-    <!--<file path="catalog/controller/extension/module}/{oct_product_tab,oct_product_viewed}.php">
+    <!--<file path="catalog/controller/extension/module/{oct_product_tab,oct_product_viewed}.php">
         <operation error="skip">
             <search><![CDATA['name' => $result['name'],]]></search>
             <add position="after"><![CDATA[             'unit'        => $result['unit'],]]></add>
@@ -116,7 +114,7 @@
         </operation>
     </file>-->
 
-    <!--<file path="catalog/view/theme/*/template/extension/module}/{oct_product_tab,oct_product_viewed}.twig">
+    <!--<file path="catalog/view/theme/*/template/extension/module/{oct_product_tab,oct_product_viewed}.twig">
         <operation error="skip">
             <search trim="true"><![CDATA[{{ product.price }}]]></search>
             <add position="replace"><![CDATA[{% if product.unit %}{{ product.price }}/{{ product.unit }}{% else %}{{ product.price }}{% endif %}]]></add>
@@ -126,9 +124,8 @@
             <add position="replace"><![CDATA[{% if product.unit %}{{ product.special }}/{{ product.unit }}{% else %}{{ product.special }}{% endif %}]]></add>
         </operation>
     </file>-->
-
-
-    <!--<file path="catalog/controller/octemplates/module/oct_popup_view.php">
+    <!-- oct_ultrastore -->
+    <file path="catalog/controller/octemplates/module/oct_popup_view.php">
         <operation error="skip">
             <search><![CDATA[$data['product_name'] = $product_info['name'];]]></search>
             <add position="after"><![CDATA[$data['unit'] = $product_info['unit'];]]></add>
@@ -155,9 +152,8 @@
             <search trim="true"><![CDATA[$('#us-quickview-modal .us-price-new').html(json['special']);]]></search>
             <add position="replace"><![CDATA[$('#us-quickview-modal .us-price-new').html(json['special']+'{% if unit %}/{{ unit }}{% endif %}');]]></add>
         </operation>
-    </file>-->
-
-
+    </file>
+    <!-- END oct_ultrastore -->
     <!-- cart -->
     <file path="system/library/cart/cart.php">
         <operation error="skip">
