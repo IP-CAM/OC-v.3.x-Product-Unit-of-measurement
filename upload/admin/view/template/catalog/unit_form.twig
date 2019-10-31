@@ -8,16 +8,16 @@
       <h1>{{ heading_title }}</h1>
       <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
-        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+          <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
         {% endfor %}
       </ul>
     </div>
   </div>
   <div class="container-fluid">
     {% if error_warning %}
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
+      <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
     {% endif %}
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -31,9 +31,9 @@
               <div class="checkbox">
                 <label>
                   {% if default %}
-                  <input type="checkbox" name="default" value="1" checked="checked" id="input-top" />
+                    <input type="checkbox" name="default" value="1" checked="checked" id="input-top" />
                   {% else %}
-                  <input type="checkbox" name="default" value="1" id="input-top" />
+                    <input type="checkbox" name="default" value="1" id="input-top" />
                   {% endif %}
                   &nbsp; </label>
               </div>
@@ -44,7 +44,7 @@
             <div class="col-sm-8">
               <input type="text" name="code" value="{{ code }}" placeholder="{{ entry_code }}" id="input-code" class="form-control" />
               {% if error_code %}
-              <div class="text-danger">{{ error_code }}</div>
+                <div class="text-danger">{{ error_code }}</div>
               {% endif %}
             </div>
           </div>
@@ -53,7 +53,7 @@
             <div class="col-sm-8">
               <input type="text" name="title" value="{{ title }}" placeholder="{{ entry_title }}" id="input-title" class="form-control" />
               {% if error_title %}
-              <div class="text-danger">{{ error_title }}</div>
+                <div class="text-danger">{{ error_title }}</div>
               {% endif %}
             </div>
           </div>

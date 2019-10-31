@@ -18,6 +18,7 @@ $_['entry_default'] = 'Default:';
 $_['entry_code'] = 'Code:';
 $_['entry_title'] = 'Unit name';
 $_['entry_symbol_rus'] = 'Legend';
+$_['entry_symbol_ukr'] = 'Legend(ukr)';
 $_['entry_symbol_intl'] = 'Symbol (international)';
 $_['entry_symbol_letter_intl'] = 'Code letter designation (international)';
 
