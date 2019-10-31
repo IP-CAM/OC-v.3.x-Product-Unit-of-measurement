@@ -49,11 +49,10 @@ $stmt->execute();
 $stmt = $dbh->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . DB_PREFIX . "product' AND COLUMN_NAME = 'unit_id'");
 $stmt->execute();
 $res = $stmt->fetch(PDO::FETCH_ASSOC);
-var_dump($res);
-//if (!$res->num_rows) {
-//    $stmt = $dbh->prepare("ALTER TABLE `". DB_PREFIX. "product` ADD  `unit_id` INT( 11 ) NOT NULL AFTER `date_available`");
-//    $stmt->execute();
-//}
+if (!$res) {
+    $stmt = $dbh->prepare("ALTER TABLE `". DB_PREFIX. "product` ADD COLUMN `unit_id` INT(11) NOT NULL AFTER `date_available`");
+    $stmt->execute();
+}
 
 $php_v = phpversion();
 if ((float)$php_v < 5.6) {
