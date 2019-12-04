@@ -46,7 +46,7 @@ $stmt = $dbh->prepare('INSERT IGNORE INTO `oc_unit` (`unit_id`, `code`, `title`,
 );
 $stmt->execute();
 
-$stmt = $dbh->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . DB_PREFIX . "product' AND COLUMN_NAME = 'unit_id'");
+$stmt = $dbh->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . DB_PREFIX . "product' AND TABLE_SCHEMA = '" . DB_DATABASE . "' AND COLUMN_NAME = 'unit_id'");
 $stmt->execute();
 $res = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$res) {
