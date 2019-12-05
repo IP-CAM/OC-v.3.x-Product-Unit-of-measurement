@@ -27,7 +27,7 @@
                 <![CDATA[$_['text_unit']             = 'Единицы измерения';]]></add>
         </operation>
     </file>
-    <file path="admin/language/uk-ua/common/column_left.php">
+    <file path="admin/language/ua-uk/common/column_left.php">
         <operation>
             <search trim="true" index="0"><![CDATA[$_['text_product']]]></search>
             <add position="after" trim="false" offset="0">
@@ -87,7 +87,7 @@
             ]]></add>
         </operation>
     </file>
-    <file path="admin/language/uk-ua/catalog/product.php">
+    <file path="admin/language/ua-uk/catalog/product.php">
         <operation>
             <search trim="true" index="0"><![CDATA[$_['entry_price']]]></search>
             <add position="after" trim="false" offset="0"><![CDATA[
@@ -342,6 +342,10 @@
         <operation error="skip">
             <search trim="true" index="0"><![CDATA[<div class="us-cart-price-all">{{ column_total }}: {{ product.total }}</div>]]></search>
             <add position="before" trim="false" offset="0"><![CDATA[{% if product.unit %}<div class="us-cart-price-unit">{{ column_unit }}: {{ product.unit }}</div>{% endif %}]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[<div class="us-cart-price-one">{{ column_price }}: {{ product.price }}</div>]]></search>
+            <add position="replace"><![CDATA[<div class="us-cart-price-one">{{ column_price }}: {% if product.unit %}{{ product.price }}/{{ product.unit }}{% else %}{{ product.price }}{% endif %}</div>]]></add>
         </operation>
     </file>
     <!-- END oct_ultrastore -->
